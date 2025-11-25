@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <title>Beneficios - Saber Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-red: #e53e3e;
+            --primary-red-dark: #c53030;
+            --primary-red-light: #fed7d7;
+            --white: #ffffff;
+            --white-95: rgba(255, 255, 255, 0.95);
+            --white-90: rgba(255, 255, 255, 0.90);
+            --white-85: rgba(255, 255, 255, 0.85);
+            --white-80: rgba(255, 255, 255, 0.80);
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--white) 0%, var(--gray-50) 100%);
+            min-height: 100vh;
+            color: var(--gray-800);
+        }
+
+        .mlp-container {
+            min-height: 100vh;
+            padding: 2rem;
+            background: var(--white);
+        }
+
+        /* Header MLP */
+        .mlp-header {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2.5rem 3rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 4px 20px rgba(229, 62, 62, 0.08);
+            border: 1px solid var(--gray-100);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mlp-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-red), var(--primary-red-dark));
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .header-text h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--gray-800);
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+
+        .header-text h1 .red-accent {
+            color: var(--primary-red);
+        }
+
+        .header-text p {
+            color: var(--gray-600);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        /* Cards MLP */
+        .mlp-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            border: 1px solid var(--gray-100);
+            margin-bottom: 2rem;
+        }
+
+        .mlp-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(229, 62, 62, 0.12);
+        }
+
+        .mlp-card-header {
+            background: var(--white);
+            padding: 1.75rem 2rem;
+            border-bottom: 2px solid var(--primary-red-light);
+            position: relative;
+        }
+
+        .mlp-card-header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: var(--primary-red);
+        }
+
+        .mlp-card-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 0;
+            color: var(--gray-800);
+        }
+
+        .mlp-card-title i {
+            color: var(--primary-red);
+            font-size: 1.1em;
+        }
+
+        .mlp-card-body {
+            padding: 2rem;
+        }
+
+        /* Alert MLP */
+        .mlp-alert {
+            background: linear-gradient(135deg, var(--white-95), var(--primary-red-light));
+            border: 1px solid var(--primary-red-light);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--warning);
+        }
+
+        .mlp-alert-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 1rem;
+        }
+
+        .mlp-alert-title i {
+            color: var(--warning);
+        }
+
+        .mlp-alert-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .mlp-alert-list li {
+            padding: 0.5rem 0;
+            color: var(--gray-700);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .mlp-alert-list li::before {
+            content: '•';
+            color: var(--primary-red);
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        /* Tabla MLP */
+        .mlp-table-container {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--gray-200);
+        }
+
+        .mlp-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--white);
+        }
+
+        .mlp-table thead {
+            background: var(--gray-50);
+            border-bottom: 2px solid var(--primary-red-light);
+        }
+
+        .mlp-table th {
+            padding: 1.25rem 1.5rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--gray-800);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+            position: relative;
+        }
+
+        .mlp-table th::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 1.5rem;
+            width: 30px;
+            height: 2px;
+            background: var(--primary-red);
+        }
+
+        .mlp-table td {
+            padding: 1.25rem 1.5rem;
+            border: none;
+            vertical-align: middle;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .mlp-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .mlp-table tbody tr:hover {
+            background: var(--primary-red-light);
+        }
+
+        /* Badges MLP */
+        .mlp-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .mlp-badge-success {
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: var(--white);
+        }
+
+        .mlp-badge-info {
+            background: linear-gradient(135deg, var(--info), #2563eb);
+            color: var(--white);
+        }
+
+        .mlp-badge-warning {
+            background: linear-gradient(135deg, var(--warning), #d97706);
+            color: var(--white);
+        }
+
+        .mlp-badge-secondary {
+            background: var(--gray-300);
+            color: var(--gray-700);
+        }
+
+        /* Estadísticas MLP */
+        .mlp-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .mlp-stat-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2rem 1rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(229, 62, 62, 0.08);
+            border: 1px solid var(--gray-100);
+            transition: all 0.3s ease;
+        }
+
+        .mlp-stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        .mlp-stat-card:nth-child(1)::before { background: var(--info); }
+        .mlp-stat-card:nth-child(2)::before { background: var(--success); }
+        .mlp-stat-card:nth-child(3)::before { background: var(--primary-red); }
+        .mlp-stat-card:nth-child(4)::before { background: var(--warning); }
+
+        .mlp-stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(229, 62, 62, 0.12);
+        }
+
+        .mlp-stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .mlp-stat-card:nth-child(1) .mlp-stat-number { color: var(--info); }
+        .mlp-stat-card:nth-child(2) .mlp-stat-number { color: var(--success); }
+        .mlp-stat-card:nth-child(3) .mlp-stat-number { color: var(--primary-red); }
+        .mlp-stat-card:nth-child(4) .mlp-stat-number { color: var(--warning); }
+
+        .mlp-stat-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Accordion MLP */
+        .mlp-accordion {
+            background: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--gray-200);
+        }
+
+        .mlp-accordion-item {
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .mlp-accordion-item:last-child {
+            border-bottom: none;
+        }
+
+        .mlp-accordion-button {
+            background: var(--white);
+            border: none;
+            padding: 1.5rem 2rem;
+            width: 100%;
+            text-align: left;
+            font-weight: 600;
+            color: var(--gray-800);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mlp-accordion-button:hover {
+            background: var(--gray-50);
+        }
+
+        .mlp-accordion-button::after {
+            content: '\f078';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            transition: transform 0.3s ease;
+        }
+
+        .mlp-accordion-button[aria-expanded="true"]::after {
+            transform: rotate(180deg);
+        }
+
+        .mlp-accordion-body {
+            padding: 0 2rem 1.5rem 2rem;
+            color: var(--gray-600);
+            line-height: 1.6;
+        }
+
+        /* Botones MLP */
+        .mlp-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mlp-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .mlp-btn:hover::before {
+            left: 100%;
+        }
+
+        .mlp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .mlp-btn-primary {
+            background: var(--primary-red);
+            color: var(--white);
+        }
+
+        .mlp-btn-primary:hover {
+            background: var(--primary-red-dark);
+        }
+
+        .mlp-btn-info {
+            background: var(--info);
+            color: var(--white);
+        }
+
+        .mlp-btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-red);
+            color: var(--primary-red);
+        }
+
+        .mlp-btn-outline:hover {
+            background: var(--primary-red);
+            color: var(--white);
+        }
+
+        /* Estados de tabla */
+        .table-success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(5, 150, 105, 0.02));
+        }
+
+        .table-info {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(37, 99, 235, 0.02));
+        }
+
+        .table-warning {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.05), rgba(217, 119, 6, 0.02));
+        }
+
+        .table-secondary {
+            background: var(--gray-50);
+        }
+
+        /* Estado vacío */
+        .mlp-empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: var(--white-95);
+            border: 2px dashed var(--gray-200);
+            border-radius: 20px;
+        }
+
+        .mlp-empty-icon {
+            font-size: 3.5rem;
+            color: var(--primary-red-light);
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+
+        .mlp-empty-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 1rem;
+        }
+
+        .mlp-empty-text {
+            color: var(--gray-600);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .mlp-table {
+                min-width: 800px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mlp-container {
+                padding: 1rem;
+            }
+            
+            .mlp-header {
+                padding: 2rem 1.5rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 1.5rem;
+            }
+            
+            .header-text h1 {
+                font-size: 2rem;
+            }
+            
+            .mlp-stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .mlp-accordion-button {
+                padding: 1.25rem 1.5rem;
+            }
+            
+            .mlp-accordion-body {
+                padding: 0 1.5rem 1.25rem 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .mlp-stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .mlp-table th,
+            .mlp-table td {
+                padding: 1rem;
+            }
+            
+            .mlp-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div layout:fragment="content" class="mlp-container">
+        <!-- Header Principal -->
+        <div class="mlp-header">
+            <div class="header-content">
+                <div class="header-text">
+                    <h1>Beneficios por <span class="red-accent">Puntajes Sobresalientes</span></h1>
+                    <p>Reconocimientos y incentivos académicos para estudiantes destacados</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información de beneficios -->
+        <div class="mlp-card">
+            <div class="mlp-card-header">
+                <h5 class="mlp-card-title">
+                    <i class="fas fa-graduation-cap"></i>
+                    Beneficios Académicos UTS
+                </h5>
+            </div>
+            <div class="mlp-card-body">
+                <div class="mlp-alert">
+                    <div class="mlp-alert-title">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Condiciones Importantes
+                    </div>
+                    <ul class="mlp-alert-list">
+                        <li>Los estudiantes deben haber presentado y aprobado la propuesta de trabajo de grado</li>
+                        <li>Vigencia del incentivo: 1 año desde la publicación de resultados por el ICFES</li>
+                        <li>Los beneficios no son acumulables y son intransferibles</li>
+                        <li>Puntaje mínimo para graduación: 80 puntos</li>
+                    </ul>
+                </div>
+
+                <!-- Tabla de beneficios -->
+                <div class="mlp-table-container">
+                    <table class="mlp-table">
+                        <thead>
+                            <tr>
+                                <th>Rango de Puntaje</th>
+                                <th>Beneficios</th>
+                                <th>Nota Trabajo de Grado</th>
+                                <th>Beca Derechos de Grado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-success">
+                                <td>
+                                    <strong>Superior a 241 puntos</strong>
+                                    <br>
+                                    <small style="color: var(--gray-600)">Excelente</small>
+                                </td>
+                                <td>
+                                    <i class="fas fa-trophy" style="color: var(--warning)"></i> Máximo beneficio
+                                </td>
+                                <td>
+                                    <span class="mlp-badge mlp-badge-success">5.0</span>
+                                </td>
+                                <td>
+                                    <span class="mlp-badge mlp-badge-success">100%</span>
+                                </td>
+                            </tr>
+                            <tr class="table-info">
+                                <td>
+                                    <strong>Entre 211 y 240 puntos</strong>
+                                    <br>
+                                    <small style="color: var(--gray-600)">Muy Bueno</small>
+                                </td>
+                                <td>
+                                    <i class="fas fa-medal" style="color: var(--info)"></i> Beneficio significativo
+                                </td>
+                                <td>
+                                    <span class="mlp-badge mlp-badge-info">4.7</span>
+                                </td>
+                                <td>
+                                    <span class="mlp-badge mlp-badge-info">50%</span>
+                                </td>
+                            </tr>
+                            <tr class="table-warning">
+                                <td>
+                                    <strong>Entre 180 y 210 puntos</strong>
+                                    <br>
+                                    <small style="color: var(--gray-600)">Bueno</small>
+                                </td>
+                                <td>
+                                    <i class="fas fa-star" style="color: var(--warning)"></i> Beneficio básico
+                                </td>
+                                <td>
+                                    <span class="mlp-badge mlp-badge-warning">4.5</span>
+                                </td>
+                                <td>
+                                    <span class="mlp-badge mlp-badge-secondary">0%</span>
+                                </td>
+                            </tr>
+                            <tr class="table-secondary">
+                                <td>
+                                    <strong>Menos de 180 puntos</strong>
+                                    <br>
+                                    <small style="color: var(--gray-600)">Básico</small>
+                                </td>
+                                <td>
+                                    <i class="fas fa-info-circle" style="color: var(--gray-600)"></i> Sin beneficios
+                                </td>
+                                <td>
+                                    <span class="mlp-badge mlp-badge-secondary">Normal</span>
+                                </td>
+                                <td>
+                                    <span class="mlp-badge mlp-badge-secondary">0%</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estudiantes destacados -->
+        <div class="mlp-card">
+            <div class="mlp-card-header">
+                <h5 class="mlp-card-title">
+                    <i class="fas fa-award"></i>
+                    Estudiantes con Beneficios
+                </h5>
+            </div>
+            <div class="mlp-card-body">
+                <div th:if="${!destacados.empty}">
+                    <div class="mlp-table-container">
+                        <table class="mlp-table">
+                            <thead>
+                                <tr>
+                                    <th>Estudiante</th>
+                                    <th>Registro</th>
+                                    <th>Puntaje Global</th>
+                                    <th>Nivel</th>
+                                    <th>Beneficios Obtenidos</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="resultado : ${destacados}">
+                                    <td>
+                                        <strong th:text="${resultado.estudiante.primerNombre + ' ' + resultado.estudiante.primerApellido}">
+                                            Nombre
+                                        </strong>
+                                    </td>
+                                    <td th:text="${resultado.estudiante.numeroRegistro}">EK20183007722</td>
+                                    <td>
+                                        <span th:text="${resultado.puntajeGlobal}" 
+                                              th:style="${resultado.puntajeGlobal >= 241} ? 'font-weight: 700; color: var(--success);' : 
+                                                         ${resultado.puntajeGlobal >= 211} ? 'font-weight: 700; color: var(--info);' : 
+                                                         'font-weight: 700; color: var(--warning);'">
+                                              200
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="mlp-badge" 
+                                              th:classappend="${resultado.puntajeGlobal >= 241} ? 'mlp-badge-success' : 
+                                                             ${resultado.puntajeGlobal >= 211} ? 'mlp-badge-info' : 'mlp-badge-warning'"
+                                              th:text="${resultado.nivelGlobal}">Nivel 3</span>
+                                    </td>
+                                    <td>
+                                        <div th:if="${resultado.puntajeGlobal >= 241}">
+                                            <span class="mlp-badge mlp-badge-success me-1">Nota 5.0</span>
+                                            <span class="mlp-badge mlp-badge-success">Beca 100%</span>
+                                        </div>
+                                        <div th:if="${resultado.puntajeGlobal >= 211 and resultado.puntajeGlobal <= 240}">
+                                            <span class="mlp-badge mlp-badge-info me-1">Nota 4.7</span>
+                                            <span class="mlp-badge mlp-badge-info">Beca 50%</span>
+                                        </div>
+                                        <div th:if="${resultado.puntajeGlobal >= 180 and resultado.puntajeGlobal <= 210}">
+                                            <span class="mlp-badge mlp-badge-warning">Nota 4.5</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="display: flex; gap: 0.5rem;">
+                                            <a th:href="@{/resultados/{id}(id=${resultado.id})}" 
+                                               class="mlp-btn mlp-btn-info" title="Ver detalle">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a th:href="@{/estudiantes/{id}(id=${resultado.estudiante.id})}" 
+                                               class="mlp-btn mlp-btn-outline" title="Ver estudiante">
+                                                <i class="fas fa-user"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div th:if="${destacados.empty}" class="mlp-empty-state">
+                    <i class="fas fa-award mlp-empty-icon"></i>
+                    <h4 class="mlp-empty-title">No hay estudiantes con beneficios</h4>
+                    <p class="mlp-empty-text">Los beneficios se aplican para puntajes iguales o superiores a 180 puntos</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información adicional -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <!-- Preguntas Frecuentes -->
+            <div class="mlp-card">
+                <div class="mlp-card-header">
+                    <h5 class="mlp-card-title">
+                        <i class="fas fa-question-circle"></i>
+                        Preguntas Frecuentes
+                    </h5>
+                </div>
+                <div class="mlp-card-body">
+                    <div class="mlp-accordion">
+                        <div class="mlp-accordion-item">
+                            <button class="mlp-accordion-button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                ¿Qué debo hacer para acceder a los beneficios?
+                            </button>
+                            <div id="faq1" class="mlp-accordion-body">
+                                Debes haber presentado y aprobado la propuesta de trabajo de grado, y obtener un puntaje igual o superior a 180 puntos en las pruebas Saber Pro.
+                            </div>
+                        </div>
+                        <div class="mlp-accordion-item">
+                            <button class="mlp-accordion-button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                ¿Por cuánto tiempo son válidos los beneficios?
+                            </button>
+                            <div id="faq2" class="mlp-accordion-body">
+                                Los beneficios tienen una vigencia de 1 año a partir de la fecha de publicación de resultados por parte del ICFES.
+                            </div>
+                        </div>
+                        <div class="mlp-accordion-item">
+                            <button class="mlp-accordion-button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                ¿Puedo acumular beneficios por múltiples presentaciones?
+                            </button>
+                            <div id="faq3" class="mlp-accordion-body">
+                                No, los beneficios no son acumulables. Solo se aplica el beneficio correspondiente al mejor puntaje obtenido.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Estadísticas -->
+            <div class="mlp-card">
+                <div class="mlp-card-header">
+                    <h5 class="mlp-card-title">
+                        <i class="fas fa-chart-line"></i>
+                        Estadísticas de Beneficios
+                    </h5>
+                </div>
+                <div class="mlp-card-body">
+                    <div class="mlp-stats-grid">
+                        <div class="mlp-stat-card">
+                            <div class="mlp-stat-number" th:text="${destacados.size()}">15</div>
+                            <div class="mlp-stat-label">Total con Beneficios</div>
+                        </div>
+                        <div class="mlp-stat-card">
+                            <div class="mlp-stat-number" th:text="${destacados.?[puntajeGlobal >= 241].size()}">3</div>
+                            <div class="mlp-stat-label">Excelente (≥241)</div>
+                        </div>
+                        <div class="mlp-stat-card">
+                            <div class="mlp-stat-number" th:text="${destacados.?[puntajeGlobal >= 211 and puntajeGlobal <= 240].size()}">5</div>
+                            <div class="mlp-stat-label">Muy Bueno (211-240)</div>
+                        </div>
+                        <div class="mlp-stat-card">
+                            <div class="mlp-stat-number" th:text="${destacados.?[puntajeGlobal >= 180 and puntajeGlobal <= 210].size()}">7</div>
+                            <div class="mlp-stat-label">Bueno (180-210)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Inicializar accordion
+        document.addEventListener('DOMContentLoaded', function() {
+            const accordionButtons = document.querySelectorAll('.mlp-accordion-button');
+            accordionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const target = this.getAttribute('data-bs-target');
+                    const body = document.querySelector(target);
+                    const isExpanded = this.getAttribute('aria-expanded') === 'true';
+                    
+                    this.setAttribute('aria-expanded', !isExpanded);
+                    if (!isExpanded) {
+                        body.style.display = 'block';
+                    } else {
+                        body.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

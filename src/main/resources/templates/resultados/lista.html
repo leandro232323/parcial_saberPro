@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+
+<head>
+    <title>Resultados - Saber Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-red: #e53e3e;
+            --primary-red-dark: #c53030;
+            --primary-red-light: #fed7d7;
+            --white: #ffffff;
+            --white-95: rgba(255, 255, 255, 0.95);
+            --white-90: rgba(255, 255, 255, 0.90);
+            --white-85: rgba(255, 255, 255, 0.85);
+            --white-80: rgba(255, 255, 255, 0.80);
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--white) 0%, var(--gray-50) 100%);
+            min-height: 100vh;
+            color: var(--gray-800);
+        }
+
+        .container-custom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header-section {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2.5rem 3rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 4px 20px rgba(229, 62, 62, 0.08);
+            border: 1px solid var(--gray-100);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-red), var(--primary-red-dark));
+        }
+
+        .header-section h2 {
+            color: var(--gray-800);
+            font-weight: 800;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .header-section h2 i {
+            color: var(--primary-red);
+            font-size: 2.2rem;
+        }
+
+        .btn-custom {
+            border-radius: 12px;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            border: none;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary-custom {
+            background: var(--primary-red);
+            color: var(--white);
+        }
+
+        .btn-primary-custom:hover {
+            background: var(--primary-red-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(229, 62, 62, 0.3);
+        }
+
+        .card-custom {
+            border: 1px solid var(--gray-200);
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            background: var(--white);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .card-body-custom {
+            padding: 2.5rem;
+        }
+
+        .form-control-custom,
+        .form-select-custom {
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--white);
+            width: 100%;
+        }
+
+        .form-control-custom:focus,
+        .form-select-custom:focus {
+            border-color: var(--primary-red);
+            box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1);
+            outline: none;
+        }
+
+        .btn-outline-primary-custom {
+            border: 2px solid var(--primary-red);
+            color: var(--primary-red);
+            background: transparent;
+        }
+
+        .btn-outline-primary-custom:hover {
+            background: var(--primary-red);
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(229, 62, 62, 0.2);
+        }
+
+        .btn-outline-secondary-custom {
+            border: 2px solid var(--gray-600);
+            color: var(--gray-600);
+            background: transparent;
+        }
+
+        .btn-outline-secondary-custom:hover {
+            background: var(--gray-600);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        .table-custom {
+            background: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-custom thead {
+            background: var(--gray-50);
+            border-bottom: 3px solid var(--primary-red-light);
+        }
+
+        .table-custom th {
+            color: var(--gray-800);
+            font-weight: 700;
+            padding: 1.5rem 2rem;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .table-custom td {
+            padding: 1.5rem 2rem;
+            border-color: var(--gray-100);
+            vertical-align: middle;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .table-custom tbody tr {
+            border-bottom: 1px solid var(--gray-100);
+            transition: all 0.3s ease;
+        }
+
+        .table-custom tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .table-custom tbody tr:hover {
+            background: var(--primary-red-light);
+            transform: translateX(8px);
+        }
+
+        .badge-custom {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .bg-success-custom {
+            background: var(--success) !important;
+            color: var(--white);
+        }
+
+        .bg-info-custom {
+            background: var(--primary-red) !important;
+            color: var(--white);
+        }
+
+        .bg-warning-custom {
+            background: var(--warning) !important;
+            color: var(--white);
+        }
+
+        .bg-secondary-custom {
+            background: var(--gray-600) !important;
+            color: var(--white);
+        }
+
+        .text-success-custom {
+            color: var(--success) !important;
+        }
+
+        .text-primary-custom {
+            color: var(--primary-red) !important;
+        }
+
+        .btn-group-custom {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .btn-action {
+            width: 45px;
+            height: 45px;
+            border: none;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-info-custom {
+            background: var(--primary-red);
+        }
+
+        .btn-warning-custom {
+            background: var(--warning);
+        }
+
+        .btn-danger-custom {
+            background: var(--gray-600);
+        }
+
+        .btn-action:hover {
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: var(--white-95);
+            border: 2px dashed var(--gray-200);
+            border-radius: 20px;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--primary-red-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .empty-state h5 {
+            color: var(--gray-800);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 1.5rem;
+            align-items: end;
+        }
+
+        @media (max-width: 768px) {
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container-custom {
+                padding: 1rem;
+            }
+
+            .header-section {
+                padding: 2rem 1.5rem;
+            }
+
+            .header-section h2 {
+                font-size: 2rem;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .table-custom th,
+            .table-custom td {
+                padding: 1rem;
+            }
+
+            .btn-group-custom {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <div class="container-custom">
+            <!-- Header -->
+            <div class="header-section">
+                <h2>
+                    <i class="fas fa-chart-line"></i>
+                    Resultados Saber Pro
+                </h2>
+                <a th:href="@{/resultados/nuevo}" class="btn-custom btn-primary-custom">
+                    <i class="fas fa-plus-circle"></i> Nuevo Resultado
+                </a>
+            </div>
+
+            <!-- Filtros -->
+            <div class="card-custom">
+                <div class="card-body-custom">
+                    <form th:action="@{/resultados}" method="get" class="filter-grid">
+                        <div>
+                            <label class="form-label">
+                                <i class="fas fa-search me-2"></i>Buscar Estudiante
+                            </label>
+                            <input type="text" name="busqueda" class="form-control-custom"
+                                placeholder="Nombre, documento o registro..." th:value="${param.busqueda}">
+                        </div>
+                        <div>
+                            <label class="form-label">
+                                <i class="fas fa-filter me-2"></i>Filtrar por Nivel
+                            </label>
+                            <select name="nivel" class="form-select-custom" th:value="${param.nivel}">
+                                <option value="">Todos los niveles</option>
+                                <option value="destacados">Destacados (≥180)</option>
+                                <option value="1">Nivel 1</option>
+                                <option value="2">Nivel 2</option>
+                                <option value="3">Nivel 3</option>
+                                <option value="4">Nivel 4</option>
+                            </select>
+                        </div>
+                        <div style="display: flex; gap: 1rem;">
+                            <button type="submit" class="btn-custom btn-outline-primary-custom">
+                                <i class="fas fa-search"></i> Filtrar
+                            </button>
+                            <a th:href="@{/resultados}" class="btn-custom btn-outline-secondary-custom">
+                                <i class="fas fa-refresh"></i> Limpiar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tabla de resultados -->
+            <div class="card-custom">
+                <div class="card-body-custom">
+                    <div style="overflow-x: auto;">
+                        <table class="table-custom">
+                            <thead>
+                                <tr>
+                                    <th><i class="fas fa-user me-2"></i>Estudiante</th>
+                                    <th><i class="fas fa-id-card me-2"></i>Registro</th>
+                                    <th><i class="fas fa-chart-bar me-2"></i>Puntaje Global</th>
+                                    <th><i class="fas fa-trophy me-2"></i>Nivel</th>
+                                    <th><i class="fas fa-edit me-2"></i>Comp. Escrita</th>
+                                    <th><i class="fas fa-calculator me-2"></i>Raz. Cuantitativo</th>
+                                    <th><i class="fas fa-book me-2"></i>Lectura Crítica</th>
+                                    <th><i class="fas fa-calendar me-2"></i>Fecha</th>
+                                    <th><i class="fas fa-cogs me-2"></i>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="resultado : ${resultados}">
+                                    <td>
+                                        <strong th:text="${resultado.estudiante.primerNombre + ' ' + resultado.estudiante.primerApellido}">
+                                            Nombre
+                                        </strong>
+                                    </td>
+                                    <td th:text="${resultado.estudiante.numeroRegistro}">
+                                        Registro
+                                    </td>
+                                    <td>
+                                        <span th:text="${resultado.puntajeGlobal}" 
+                                              style="font-size: 1.2rem; font-weight: 800;">
+                                            Puntaje
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge-custom" th:classappend="${resultado.puntajeGlobal >= 241} ? 'bg-success-custom' : 'bg-info-custom'">
+                                            <i class="fas fa-star me-1"></i>
+                                            <span th:text="${resultado.nivelGlobal}">Nivel</span>
+                                        </span>
+                                    </td>
+                                    <td th:text="${resultado.comunicacionEscrita} ?: 'N/A'">
+                                        N/A
+                                    </td>
+                                    <td th:text="${resultado.razonamientoCuantitativo} ?: 'N/A'">
+                                        N/A
+                                    </td>
+                                    <td th:text="${resultado.lecturaCritica} ?: 'N/A'">
+                                        N/A
+                                    </td>
+                                    <td th:text="${resultado.fechaRegistro} ? ${#temporals.format(resultado.fechaRegistro, 'dd/MM/yyyy')} : 'N/A'">
+                                        Fecha
+                                    </td>
+                                    <td>
+                                        <div class="btn-group-custom">
+                                            <a th:href="@{/resultados/{id}(id=${resultado.id})}" 
+                                               class="btn-action btn-info-custom" title="Ver detalle">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a th:href="@{/resultados/editar/{id}(id=${resultado.id})}" 
+                                               class="btn-action btn-warning-custom" title="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <!-- BOTÓN ELIMINAR SIMPLIFICADO -->
+                                            <button type="button" class="btn-action btn-danger-custom btn-eliminar"
+                                                th:data-id="${resultado.id}"
+                                                th:data-nombre="${resultado.estudiante.primerNombre + ' ' + resultado.estudiante.primerApellido}"
+                                                title="Eliminar">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                
+                                <tr th:if="${resultados.empty}">
+                                    <td colspan="9">
+                                        <div class="empty-state">
+                                            <i class="fas fa-chart-bar"></i>
+                                            <h5>No hay resultados registrados</h5>
+                                            <p>Comienza agregando el primer resultado al sistema</p>
+                                            <a th:href="@{/resultados/nuevo}" class="btn-custom btn-primary-custom">
+                                                <i class="fas fa-plus-circle"></i> Registrar primer resultado
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalConfirmacion" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+                                Confirmar Eliminación
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" style="text-align: center;">
+                            <i class="fas fa-trash-alt text-danger" style="font-size: 3rem; margin-bottom: 1.5rem;"></i>
+                            <h5>¿Está seguro que desea eliminar el resultado?</h5>
+                            <p>Se eliminará el resultado de: <strong id="nombreEstudiante" class="text-danger"></strong></p>
+                            <p class="text-muted">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Esta acción no se puede deshacer.
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn-custom btn-outline-secondary-custom" data-bs-dismiss="modal">
+                                <i class="fas fa-times"></i> Cancelar
+                            </button>
+                            <form id="formEliminar" method="post" style="display: inline;">
+                                <input type="hidden" name="_method" value="delete">
+                                <button type="submit" class="btn-custom btn-primary-custom">
+                                    <i class="fas fa-trash"></i> Eliminar
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ Página cargada - Configurando eliminación');
+            
+            const botonesEliminar = document.querySelectorAll('.btn-eliminar');
+            
+            botonesEliminar.forEach(boton => {
+                boton.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    const nombre = this.getAttribute('data-nombre');
+                    
+                    console.log('🖱️ Eliminar clicked - ID:', id, 'Nombre:', nombre);
+                    
+                    // Actualizar modal
+                    document.getElementById('nombreEstudiante').textContent = nombre;
+                    
+                    // Configurar acción del formulario
+                    const form = document.getElementById('formEliminar');
+                    form.action = '/resultados/eliminar/' + id;
+                    console.log('🔗 Form action:', form.action);
+                    
+                    // Mostrar modal
+                    const modalElement = document.getElementById('modalConfirmacion');
+                    const modal = new bootstrap.Modal(modalElement);
+                    modal.show();
+                });
+            });
+        });
+    </script>
+</body>
+</html>

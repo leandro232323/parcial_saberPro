@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: saber-pro-system
+    runtime: docker
+    plan: free
+    envVars:
+      - key: SERVER_PORT
+        value: 8098
+      - key: SPRING_DATASOURCE_URL
+        value: jdbc:mysql://gateway01.us-east-1.prod.aws.tidbcloud.com:4000/parcial_saber_pro?useSSL=true&requireSSL=true
+      - key: SPRING_DATASOURCE_USERNAME
+        value: CBrvm1AvSY1Lo7e.root
+      - key: SPRING_DATASOURCE_PASSWORD
+        value: cTjbxPXjVGye0Y0s
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
+      - key: SPRING_JPA_SHOW_SQL
+        value: "true"
+      - key: SPRING_THYMELEAF_CACHE
+        value: "false"
+      - key: SPRING_WEB_RESOURCES_CACHE_PERIOD
+        value: "0"

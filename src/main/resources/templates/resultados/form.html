@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+
+<head>
+    <title>Formulario Resultado - Saber Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-red: #e53e3e;
+            --primary-red-dark: #c53030;
+            --primary-red-light: #fed7d7;
+            --white: #ffffff;
+            --white-95: rgba(255, 255, 255, 0.95);
+            --white-90: rgba(255, 255, 255, 0.90);
+            --white-85: rgba(255, 255, 255, 0.85);
+            --white-80: rgba(255, 255, 255, 0.80);
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--white) 0%, var(--gray-50) 100%);
+            min-height: 100vh;
+            color: var(--gray-800);
+        }
+
+        .container-custom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .card-custom {
+            border: 1px solid var(--gray-200);
+            border-radius: 24px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            background: var(--white);
+            overflow: hidden;
+        }
+
+        .card-header-custom {
+            background: var(--white);
+            border-bottom: 3px solid var(--primary-red-light);
+            padding: 2.5rem 3rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .card-header-custom::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-red), var(--primary-red-dark));
+        }
+
+        .card-header-custom h4 {
+            color: var(--gray-800);
+            font-weight: 800;
+            font-size: 2.2rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .card-header-custom h4 i {
+            color: var(--primary-red);
+            font-size: 2rem;
+        }
+
+        .card-body-custom {
+            padding: 3rem;
+        }
+
+        .form-label-custom {
+            color: var(--gray-800);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .form-label-custom i {
+            color: var(--primary-red);
+            font-size: 1.1rem;
+        }
+
+        .form-control-custom,
+        .form-select-custom {
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            background: var(--white);
+            width: 100%;
+            padding-right: 3.5rem !important;
+        }
+
+        .form-control-custom:focus,
+        .form-select-custom:focus {
+            border-color: var(--primary-red);
+            box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.15);
+            outline: none;
+            background: var(--white);
+        }
+
+        .form-text-custom {
+            color: var(--gray-600);
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-custom {
+            border-radius: 12px;
+            padding: 1.25rem 2.5rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            border: none;
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+
+        .btn-primary-custom {
+            background: var(--primary-red);
+            color: var(--white);
+        }
+
+        .btn-primary-custom:hover {
+            background: var(--primary-red-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(229, 62, 62, 0.3);
+        }
+
+        .btn-secondary-custom {
+            background: var(--gray-600);
+            color: var(--white);
+        }
+
+        .btn-secondary-custom:hover {
+            background: var(--gray-700);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(75, 85, 99, 0.3);
+        }
+
+        .section-title {
+            color: var(--gray-800);
+            font-weight: 800;
+            font-size: 1.5rem;
+            margin: 3rem 0 2rem 0;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid var(--primary-red-light);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-title i {
+            color: var(--primary-red);
+            font-size: 1.4rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 3rem;
+            padding-top: 2.5rem;
+            border-top: 2px solid var(--gray-100);
+        }
+
+        .input-group-custom {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+            font-size: 1.2rem;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .competence-section {
+            background: var(--gray-50);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin: 2rem 0;
+        }
+
+        /* Grupos de botones de navegación */
+        .mlp-action-group {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .navigation-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .action-group {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        /* Botón outline personalizado */
+        .btn-outline-custom {
+            background: transparent;
+            border: 2px solid var(--primary-red);
+            color: var(--primary-red);
+        }
+
+        .btn-outline-custom:hover {
+            background: var(--primary-red);
+            color: var(--white);
+        }
+
+        /* Para responsive */
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container-custom {
+                padding: 1rem;
+            }
+
+            .card-body-custom {
+                padding: 2rem;
+            }
+
+            .card-header-custom {
+                padding: 2rem 1.5rem;
+            }
+
+            .card-header-custom h4 {
+                font-size: 1.8rem;
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .btn-custom {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <div class="container-custom">
+            <div class="card-custom">
+                <div class="card-header-custom">
+                    <h4>
+                        <i class="fas fa-chart-bar"></i>
+                        <span th:text="${resultado.id != null} ? 'Editar Resultado' : 'Nuevo Resultado'">Nuevo
+                            Resultado</span>
+                    </h4>
+                </div>
+                <div class="card-body-custom">
+                    <form
+                        th:action="${resultado.id != null} ? @{/resultados/guardar/{id}(id=${resultado.id})} : @{/resultados/guardar}"
+                        th:object="${resultado}" method="post">
+                        <input th:if="${resultado.id != null}" type="hidden" name="_method" value="put">
+
+                        <!-- Selección de estudiante -->
+                        <div class="mb-5">
+                            <label for="estudiante" class="form-label-custom">
+                                <i class="fas fa-user-graduate"></i>
+                                Estudiante *
+                            </label>
+                            <div class="input-group-custom">
+                                <select th:field="*{estudiante.id}" class="form-select-custom" required
+                                    id="estudianteSelect">
+                                    <option value="">Seleccionar estudiante...</option>
+                                    <option th:each="est : ${estudiantes}" th:value="${est.id}"
+                                        th:text="${est.primerNombre + ' ' + est.primerApellido + ' - ' + est.numeroRegistro}"
+                                        th:selected="${resultado.estudiante != null and resultado.estudiante.id == est.id}">
+                                    </option>
+                                </select>
+                                <i class="fas fa-chevron-down input-icon"></i>
+                            </div>
+
+                            <!-- Mensaje informativo si ya viene con estudiante -->
+                            <div th:if="${resultado.estudiante != null and resultado.estudiante.id != null}"
+                                class="form-text-custom">
+                                <i class="fas fa-info-circle"></i>
+                                Estudiante actualmente seleccionado:
+                                <strong
+                                    th:text="${resultado.estudiante.primerNombre + ' ' + resultado.estudiante.primerApellido}"></strong>
+                                - Puedes cambiarlo si es necesario
+                            </div>
+                        </div>
+
+                        <!-- Puntajes por competencias -->
+                        <h5 class="section-title">
+                            <i class="fas fa-tachometer-alt"></i>
+                            Puntaje Global
+                        </h5>
+                        <div class="form-grid">
+                            <div>
+                                <label for="puntajeGlobal" class="form-label-custom">
+                                    <i class="fas fa-bullseye"></i>
+                                    Puntaje Global *
+                                </label>
+                                <div class="input-group-custom">
+                                    <input type="number" th:field="*{puntajeGlobal}" class="form-control-custom" min="0"
+                                        max="300" required placeholder="0-300">
+                                    <i class="fas fa-chart-line input-icon"></i>
+                                </div>
+                                <div class="form-text-custom">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span th:if="${resultado.puntajeGlobal != null}">
+                                        Nivel actual:
+                                        <span
+                                            th:text="${resultado.puntajeGlobal >= 241} ? 'Excelente (≥241)' :
+                                                      ${resultado.puntajeGlobal >= 211} ? 'Muy Bueno (211-240)' :
+                                                      ${resultado.puntajeGlobal >= 180} ? 'Bueno (180-210)' : 'Básico (<180)'}">
+                                        </span>
+                                    </span>
+                                    <span th:unless="${resultado.puntajeGlobal != null}">
+                                        Ingrese un puntaje entre 0 y 300
+                                    </span>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="nivelGlobal" class="form-label-custom">
+                                    <i class="fas fa-trophy"></i>
+                                    Nivel Global
+                                </label>
+                                <div class="input-group-custom">
+                                    <input type="text" th:field="*{nivelGlobal}" class="form-control-custom"
+                                        placeholder="Se calcula automáticamente" readonly>
+                                    <i class="fas fa-calculator input-icon"></i>
+                                </div>
+                                <div class="form-text-custom">
+                                    <i class="fas fa-magic"></i>
+                                    Este campo se calcula automáticamente
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Competencias específicas -->
+                        <div class="competence-section">
+                            <h5 class="section-title" style="margin-top: 0;">
+                                <i class="fas fa-cogs"></i>
+                                Competencias Específicas
+                            </h5>
+                            <div class="form-grid">
+                                <div>
+                                    <label for="comunicacionEscrita" class="form-label-custom">
+                                        <i class="fas fa-edit"></i>
+                                        Comunicación Escrita
+                                    </label>
+                                    <div class="input-group-custom">
+                                        <input type="number" th:field="*{comunicacionEscrita}"
+                                            class="form-control-custom" min="0" max="300" placeholder="0-300">
+                                        <i class="fas fa-pen input-icon"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="razonamientoCuantitativo" class="form-label-custom">
+                                        <i class="fas fa-calculator"></i>
+                                        Razonamiento Cuantitativo
+                                    </label>
+                                    <div class="input-group-custom">
+                                        <input type="number" th:field="*{razonamientoCuantitativo}"
+                                            class="form-control-custom" min="0" max="300" placeholder="0-300">
+                                        <i class="fas fa-square-root-alt input-icon"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="lecturaCritica" class="form-label-custom">
+                                        <i class="fas fa-book"></i>
+                                        Lectura Crítica
+                                    </label>
+                                    <div class="input-group-custom">
+                                        <input type="number" th:field="*{lecturaCritica}" class="form-control-custom"
+                                            min="0" max="300" placeholder="0-300">
+                                        <i class="fas fa-search input-icon"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="competenciasCiudadanas" class="form-label-custom">
+                                        <i class="fas fa-users"></i>
+                                        Competencias Ciudadanas
+                                    </label>
+                                    <div class="input-group-custom">
+                                        <input type="number" th:field="*{competenciasCiudadanas}"
+                                            class="form-control-custom" min="0" max="300" placeholder="0-300">
+                                        <i class="fas fa-handshake input-icon"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="ingles" class="form-label-custom">
+                                        <i class="fas fa-language"></i>
+                                        Inglés
+                                    </label>
+                                    <div class="input-group-custom">
+                                        <input type="number" th:field="*{ingles}" class="form-control-custom" min="0"
+                                            max="300" placeholder="0-300">
+                                        <i class="fas fa-globe input-icon"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="nivelInglesCefr" class="form-label-custom">
+                                        <i class="fas fa-certificate"></i>
+                                        Nivel Inglés (CEFR)
+                                    </label>
+                                    <div class="input-group-custom">
+                                        <select th:field="*{nivelInglesCefr}" class="form-select-custom">
+                                            <option value="">Seleccionar nivel...</option>
+                                            <option value="A1">A1 - Principiante</option>
+                                            <option value="A2">A2 - Básico</option>
+                                            <option value="B1">B1 - Intermedio</option>
+                                            <option value="B2">B2 - Intermedio Alto</option>
+                                            <option value="C1">C1 - Avanzado</option>
+                                            <option value="C2">C2 - Maestría</option>
+                                        </select>
+                                        <i class="fas fa-chevron-down input-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <div class="navigation-group">
+                                <a th:href="@{/estudiantes}" class="btn-custom btn-secondary-custom">
+                                    <i class="fas fa-users"></i> Estudiantes
+                                </a>
+                                <a th:href="@{/resultados}" class="btn-custom btn-secondary-custom">
+                                    <i class="fas fa-arrow-left"></i> Volver a Resultados
+                                </a>
+                            </div>
+                            <div class="action-group">
+                                <a th:href="@{/}" class="btn-custom btn-outline-custom">
+                                    <i class="fas fa-home"></i> Inicio
+                                </a>
+                                <button type="submit" class="btn-custom btn-primary-custom">
+                                    <i class="fas fa-save"></i>
+                                    <span
+                                        th:text="${resultado.id != null} ? 'Actualizar Resultado' : 'Guardar Resultado'">Guardar
+                                        Resultado</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const estudianteSelect = document.getElementById('estudianteSelect');
+
+                console.log('Select encontrado:', estudianteSelect);
+                console.log('Número de opciones:', estudianteSelect ? estudianteSelect.options.length : 'No encontrado');
+
+                // Diagnosticar clicks
+                if (estudianteSelect) {
+                    estudianteSelect.addEventListener('click', function (e) {
+                        console.log('Click en select - funcionando!');
+                    });
+
+                    estudianteSelect.addEventListener('focus', function () {
+                        console.log('Select enfocado');
+                    });
+                }
+
+                const puntajeInput = document.querySelector('input[name="puntajeGlobal"]');
+                const nivelInput = document.querySelector('input[name="nivelGlobal"]');
+
+                if (puntajeInput && nivelInput) {
+                    puntajeInput.addEventListener('input', function () {
+                        const puntaje = parseInt(this.value) || 0;
+                        let nivel = '';
+
+                        if (puntaje >= 241) nivel = 'Nivel 4 - Excelente';
+                        else if (puntaje >= 211) nivel = 'Nivel 3 - Avanzado';
+                        else if (puntaje >= 180) nivel = 'Nivel 2 - Intermedio';
+                        else if (puntaje >= 0) nivel = 'Nivel 1 - Básico';
+
+                        nivelInput.value = nivel;
+                    });
+                }
+            });
+        </script>
+    </div>
+</body>
+
+</html>

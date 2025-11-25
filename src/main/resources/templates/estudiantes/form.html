@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+
+<head>
+    <title>Formulario Estudiante - Saber Pro</title>
+    <link rel="stylesheet" href="/css/styleEstudi.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-red: #e53e3e;
+            --primary-red-dark: #c53030;
+            --primary-red-light: #fed7d7;
+            --white: #ffffff;
+            --white-95: rgba(255, 255, 255, 0.95);
+            --white-90: rgba(255, 255, 255, 0.90);
+            --white-85: rgba(255, 255, 255, 0.85);
+            --white-80: rgba(255, 255, 255, 0.80);
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--white) 0%, var(--gray-50) 100%);
+            min-height: 100vh;
+            color: var(--gray-800);
+        }
+
+        .mlp-form-container {
+            min-height: 100vh;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--white);
+        }
+
+        /* Card Principal del Formulario */
+        .mlp-form-card {
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            width: 100%;
+            max-width: 900px;
+            border: 1px solid var(--gray-100);
+        }
+
+        .mlp-form-header {
+            background: var(--white);
+            padding: 2.5rem 3rem;
+            text-align: center;
+            position: relative;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .mlp-form-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-red), var(--primary-red-dark));
+        }
+
+        .mlp-form-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 0;
+            color: var(--gray-800);
+        }
+
+        .mlp-form-title .red-accent {
+            color: var(--primary-red);
+        }
+
+        .mlp-form-subtitle {
+            margin-top: 0.5rem;
+            color: var(--gray-600);
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        .mlp-form-body {
+            padding: 3rem;
+        }
+
+        /* Secciones del Formulario */
+        .mlp-form-section {
+            margin-bottom: 3rem;
+        }
+
+        .mlp-section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--primary-red-light);
+        }
+
+        .mlp-section-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--primary-red-light);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-red);
+            font-size: 1.25rem;
+        }
+
+        .mlp-section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin: 0;
+        }
+
+        /* Grid del Formulario */
+        .mlp-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        /* Grupos de Formulario */
+        .mlp-form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .mlp-form-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .mlp-form-label.required::after {
+            content: '*';
+            color: var(--primary-red);
+            font-weight: bold;
+            margin-left: 0.25rem;
+        }
+
+        .mlp-input-group {
+            position: relative;
+        }
+
+        .mlp-input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-600);
+            z-index: 2;
+        }
+
+        .mlp-form-control {
+            width: 100%;
+            background: var(--white);
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 1rem 1rem 1rem 3rem;
+            font-size: 1rem;
+            color: var(--gray-800);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .mlp-form-control:focus {
+            outline: none;
+            border-color: var(--primary-red);
+            background: var(--white);
+            box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .mlp-form-control::placeholder {
+            color: var(--gray-600);
+        }
+
+
+        /* Grupos de botones de navegación */
+        .mlp-action-group {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .navigation-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .action-group {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        /* Botón outline personalizado */
+        .btn-outline-custom {
+            background: transparent;
+            border: 2px solid var(--primary-red);
+            color: var(--primary-red);
+        }
+
+        .btn-outline-custom:hover {
+            background: var(--primary-red);
+            color: var(--white);
+        }
+
+        /* Para responsive */
+
+        select.mlp-form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%234b5563' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 1rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 3rem;
+        }
+
+        /* Estados de Validación */
+        .mlp-form-control:invalid:not(:focus):not(:placeholder-shown) {
+            border-color: var(--primary-red);
+        }
+
+        .mlp-form-control:valid:not(:focus):not(:placeholder-shown) {
+            border-color: var(--success);
+        }
+
+        /* Acciones del Formulario */
+        .mlp-form-actions {
+            background: var(--gray-50);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 2rem;
+            border: 1px solid var(--gray-200);
+        }
+
+        .mlp-actions-grid {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .mlp-required-note {
+            text-align: center;
+            color: var(--gray-600);
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        .mlp-required-note::before {
+            content: '*';
+            color: var(--primary-red);
+            font-weight: bold;
+            margin-right: 0.25rem;
+        }
+
+        /* Botones MLP */
+        .mlp-btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .mlp-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .mlp-btn:hover::before {
+            left: 100%;
+        }
+
+        .mlp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .mlp-btn-primary {
+            background: var(--primary-red);
+            color: var(--white);
+        }
+
+        .mlp-btn-primary:hover {
+            background: var(--primary-red-dark);
+        }
+
+        .mlp-btn-secondary {
+            background: var(--gray-600);
+            color: var(--white);
+        }
+
+        .mlp-btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-red);
+            color: var(--primary-red);
+        }
+
+        .mlp-btn-outline:hover {
+            background: var(--primary-red);
+            color: var(--white);
+        }
+
+        /* Efectos de Hover en Inputs */
+        .mlp-form-group:hover .mlp-input-icon {
+            color: var(--primary-red);
+        }
+
+        .mlp-form-group:hover .mlp-form-control {
+            border-color: var(--gray-300);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .mlp-form-container {
+                padding: 1rem;
+            }
+
+            .mlp-form-card {
+                margin: 1rem;
+            }
+
+            .mlp-form-header {
+                padding: 2rem 1.5rem;
+            }
+
+            .mlp-form-body {
+                padding: 2rem 1.5rem;
+            }
+
+            .mlp-form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .mlp-form-title {
+                font-size: 1.75rem;
+            }
+
+            .mlp-actions-grid {
+                flex-direction: column;
+            }
+
+            .mlp-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .mlp-form-header {
+                padding: 1.5rem 1rem;
+            }
+
+            .mlp-form-body {
+                padding: 1.5rem 1rem;
+            }
+
+            .mlp-section-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.75rem;
+            }
+
+            .mlp-form-title {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div layout:fragment="content" class="mlp-form-container">
+        <div class="mlp-form-card">
+            <div class="mlp-form-header">
+                <h1 class="mlp-form-title">
+                    <h1 class="mlp-form-title">
+                        <i class="fas fa-user-plus"></i>
+                        <span th:if="${estudiante.id != null}">Editar <span class="red-accent">Estudiante</span></span>
+                        <span th:unless="${estudiante.id != null}">Nuevo <span
+                                class="red-accent">Estudiante</span></span>
+                    </h1>
+                </h1>
+                <p class="mlp-form-subtitle"
+                    th:text="${estudiante.id != null} ? 'Actualiza la información del estudiante' : 'Completa la información para registrar un nuevo estudiante'">
+                    Completa la información para registrar un nuevo estudiante
+                </p>
+            </div>
+
+            <div class="mlp-form-body">
+                <form th:action="@{/estudiantes/guardar}" th:object="${estudiante}" method="post">
+                    <input type="hidden" th:field="*{id}">
+                    <!-- Información de Documentación -->
+                    <div class="mlp-form-section">
+                        <div class="mlp-section-header">
+                            <div class="mlp-section-icon">
+                                <i class="fas fa-id-card"></i>
+                            </div>
+                            <h3 class="mlp-section-title">Información de Documentación</h3>
+                        </div>
+
+                        <div class="mlp-form-grid">
+                            <div class="mlp-form-group">
+                                <label for="tipoDocumento" class="mlp-form-label required">
+                                    <i class="fas fa-passport"></i>
+                                    Tipo de Documento
+                                </label>
+                                <div class="mlp-input-group">
+                                    <i class="fas fa-id-card mlp-input-icon"></i>
+                                    <select th:field="*{tipoDocumento}" class="mlp-form-control" id="tipo_documento"
+                                        required>
+                                        <option value="">Seleccionar tipo...</option>
+                                        <option value="CC">Cédula de Ciudadanía</option>
+                                        <option value="TI">Tarjeta de Identidad</option>
+                                        <option value="CE">Cédula de Extranjería</option>
+                                        <option value="PA">Pasaporte</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mlp-form-group">
+                                <label for="numeroDocumento" class="mlp-form-label required">
+                                    <i class="fas fa-hashtag"></i>
+                                    Número de Documento
+                                </label>
+                                <div class="mlp-input-group">
+                                    <i class="fas fa-id-number mlp-input-icon"></i>
+                                    <input type="text" th:field="*{numeroDocumento}" class="mlp-form-control"
+                                        id="numero_documento" required placeholder="Ingrese el número de documento">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Información Personal -->
+                    <div class="mlp-form-section">
+                        <div class="mlp-section-header">
+                            <div class="mlp-section-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <h3 class="mlp-section-title">Información Personal</h3>
+                        </div>
+
+                        <div class="mlp-form-grid">
+                            <div class="mlp-form-group">
+                                <label for="primerNombre" class="mlp-form-label required">
+                                    <i class="fas fa-signature"></i>
+                                    Primer Nombre
+                                </label>
+                                <div class="mlp-input-group">
+                                    <i class="fas fa-user mlp-input-icon"></i>
+                                    <input type="text" th:field="*{primerNombre}" class="mlp-form-control"
+                                        id="primer_nombre" required placeholder="Primer nombre">
+                                </div>
+                            </div>
+
+                            <div class="mlp-form-group">
+                                <label for="segundoNombre" class="mlp-form-label">
+                                    <i class="fas fa-signature"></i>
+                                    Segundo Nombre
+                                </label>
+                                <div class="mlp-input-group">
+                                    <i class="fas fa-user mlp-input-icon"></i>
+                                    <input type="text" th:field="*{segundoNombre}" class="mlp-form-control"
+                                        placeholder="Segundo nombre (opcional)" id="segundo_nombre">
+                                </div>
+                            </div>
+
+                            <div class="mlp-form-group">
+                                <label for="primerApellido" class="mlp-form-label required">
+                                    <i class="fas fa-signature"></i>
+                                    Primer Apellido
+                                </label>
+                                <div class="mlp-input-group">
+                                    <i class="fas fa-user mlp-input-icon"></i>
+                                    <input type="text" th:field="*{primerApellido}" class="mlp-form-control" required
+                                        placeholder="Primer apellido" id="primer_apellido">
+                                </div>
+                            </div>
+
+                            <div class="mlp-form-group">
+                                <label for="segundoApellido" class="mlp-form-label">
+                                    <i class="fas fa-signature"></i>
+                                    Segundo Apellido
+                                </label>
+                                <div class="mlp-input-group">
+                                    <i class="fas fa-user mlp-input-icon"></i>
+                                    <input type="text" th:field="*{segundoApellido}" class="mlp-form-control"
+                                        placeholder="Segundo apellido (opcional)" id="segundo_apellido">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Información Académica y Contacto -->
+                    <div class="mlp-form-section">
+                        <div class="mlp-section-header">
+                            <div class="mlp-section-icon">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <h3 class="mlp-section-title">Información Académica y Contacto</h3>
+                        </div>
+
+                        <div class="mlp-form-grid">
+                            <div class="mlp-form-group">
+                                <label for="numeroRegistro" class="mlp-form-label required">
+                                    <i class="fas fa-id-badge"></i>
+                                    Número de Registro
+                                </label>
+                                <div class="mlp-input-group">
+                                    <i class="fas fa-hashtag mlp-input-icon"></i>
+                                    <input type="text" th:field="*{numeroRegistro}" class="mlp-form-control" required
+                                        placeholder="Ej: EK20183007722" id="numero_registro">
+                                </div>
+                            </div>
+
+                            <!-- ← AGREGAR ESTE NUEVO CAMPO DE CONTRASEÑA -->
+                            <div class="mlp-form-group">
+                                <label for="password" class="mlp-form-label required">
+                                    <i class="fas fa-lock"></i>
+                                    Contraseña
+                                </label>
+                                <div class="mlp-input-group">
+                                    <i class="fas fa-key mlp-input-icon"></i>
+                                    <input type="password" th:field="*{password}" class="mlp-form-control" required
+                                        placeholder="Ingrese la contraseña" id="password">
+                                </div>
+                                <small
+                                    style="color: var(--gray-600); font-size: 0.8rem; margin-top: 0.5rem; display: block;">
+                                    <i class="fas fa-info-circle"></i>
+                                    Esta contraseña se usará para que el estudiante inicie sesión con su correo
+                                    electrónico
+                                </small>
+                            </div>
+
+                            <div class="mlp-form-group">
+                                <label for="correoElectronico" class="mlp-form-label">
+                                    <i class="fas fa-envelope"></i>
+                                    Correo Electrónico
+                                </label>
+                                <div class="mlp-input-group">
+                                    <i class="fas fa-at mlp-input-icon"></i>
+                                    <input type="email" th:field="*{correoElectronico}" class="mlp-form-control"
+                                        placeholder="correo@ejemplo.com" id="correo">
+                                </div>
+                            </div>
+
+                            <div class="mlp-form-group">
+                                <label for="numeroTelefonico" class="mlp-form-label">
+                                    <i class="fas fa-phone"></i>
+                                    Teléfono
+                                </label>
+                                <div class="mlp-input-group">
+                                    <i class="fas fa-mobile mlp-input-icon"></i>
+                                    <input type="tel" th:field="*{numeroTelefonico}" class="mlp-form-control"
+                                        placeholder="300 123 4567" id="telefono">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Acciones del Formulario -->
+                    <div class="mlp-form-actions">
+                        <div class="mlp-actions-grid">
+                            <a th:href="@{/estudiantes}" class="mlp-btn mlp-btn-secondary">
+                                Gestionar Estudiantes
+                            </a>
+                            <div class="mlp-action-group">
+                                <a th:href="@{/}" class="mlp-btn mlp-btn-outline">
+                                    <i class="fas fa-home"></i> Volver
+                                </a>
+                                <button type="submit" class="mlp-btn mlp-btn-primary" id="btnGuardar">
+                                    <i class="fas fa-save"></i>
+                                    <span
+                                        th:text="${estudiante.id != null} ? 'Actualizar Estudiante' : 'Guardar Estudiante'">Guardar
+                                        Estudiante</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mlp-required-note">
+                            Campos obligatorios
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+<script>
+    function iniciar() {
+        const form = document.querySelector("form");
+
+        form.addEventListener("submit", function (event) {
+            const tipo_documento = document.getElementById("tipo_documento").value;
+            const numero_documento = document.getElementById("numero_documento").value;
+            const primer_nombre = document.getElementById("primer_nombre").value;
+            const primer_apellido = document.getElementById("primer_apellido").value;
+            const numero_registro = document.getElementById("numero_registro").value;
+            const password = document.getElementById("password").value; // ← NUEVA VALIDACIÓN
+
+            // Solo validar campos obligatorios
+            if (tipo_documento === "" || numero_documento === "" ||
+                primer_nombre === "" || primer_apellido === "" ||
+                numero_registro === "" || password === "") { // ← AGREGAR password
+                alert("Debe llenar todos los campos obligatorios");
+                event.preventDefault(); // Detener el envío del formulario
+                return;
+            }
+
+            // Validar longitud mínima de contraseña
+            if (password.length < 4) {
+                alert("La contraseña debe tener al menos 4 caracteres");
+                event.preventDefault();
+                return;
+            }
+
+            // Si pasa la validación, el formulario se envía automáticamente
+        });
+    }
+
+    window.addEventListener("DOMContentLoaded", iniciar);
+</script>
+
+</html>

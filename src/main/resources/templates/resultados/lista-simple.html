@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Resultados - DEBUG</title>
+</head>
+<body>
+    <h1>Resultados Saber Pro - VISTA DEBUG</h1>
+    
+    <div th:if="${resultados != null}">
+        <p>Total resultados recibidos: <span th:text="${resultados.size()}">0</span></p>
+        
+        <table border="1" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Estudiante</th>
+                    <th>Registro</th>
+                    <th>Puntaje</th>
+                    <th>Nivel</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- ITERACIÓN SIMPLE -->
+                <tr th:each="resultado : ${resultados}">
+                    <td th:text="${resultado.id}">-</td>
+                    <td th:text="${resultado.estudiante != null} ? 
+                                (resultado.estudiante.primerNombre + ' ' + resultado.estudiante.primerApellido) : 
+                                'SIN ESTUDIANTE'">-</td>
+                    <td th:text="${resultado.estudiante != null} ? 
+                                resultado.estudiante.numeroRegistro : 
+                                'SIN REGISTRO'">-</td>
+                    <td th:text="${resultado.puntajeGlobal}">-</td>
+                    <td th:text="${resultado.nivelGlobal}">-</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <div th:if="${resultados == null or resultados.empty}">
+        <p style="color: red;">NO HAY RESULTADOS O LA LISTA ES NULL</p>
+    </div>
+</body>
+</html>

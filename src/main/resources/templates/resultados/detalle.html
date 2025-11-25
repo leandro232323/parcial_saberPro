@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <title>Detalle Resultado - Saber Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-red: #e53e3e;
+            --primary-red-dark: #c53030;
+            --primary-red-light: #fed7d7;
+            --white: #ffffff;
+            --white-95: rgba(255, 255, 255, 0.95);
+            --white-90: rgba(255, 255, 255, 0.90);
+            --white-85: rgba(255, 255, 255, 0.85);
+            --white-80: rgba(255, 255, 255, 0.80);
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--white) 0%, var(--gray-50) 100%);
+            min-height: 100vh;
+            color: var(--gray-800);
+        }
+
+        .container-custom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header-section {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2.5rem 3rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 4px 20px rgba(229, 62, 62, 0.08);
+            border: 1px solid var(--gray-100);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-red), var(--primary-red-dark));
+        }
+
+        .header-section h2 {
+            color: var(--gray-800);
+            font-weight: 800;
+            font-size: 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 0;
+        }
+
+        .header-section h2 i {
+            color: var(--primary-red);
+            font-size: 2.2rem;
+        }
+
+        .btn-custom {
+            border-radius: 12px;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            border: none;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .btn-warning-custom {
+            background: var(--warning);
+            color: var(--white);
+        }
+
+        .btn-secondary-custom {
+            background: var(--gray-600);
+            color: var(--white);
+        }
+
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-custom {
+            border: 1px solid var(--gray-200);
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            background: var(--white);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .card-header-custom {
+            background: var(--white);
+            border-bottom: 2px solid var(--primary-red-light);
+            padding: 2rem 2.5rem;
+            border-radius: 20px 20px 0 0 !important;
+        }
+
+        .card-header-custom h5 {
+            color: var(--gray-800);
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .card-header-custom h5 i {
+            color: var(--primary-red);
+            font-size: 1.5rem;
+        }
+
+        .card-body-custom {
+            padding: 2.5rem;
+        }
+
+        .table-borderless-custom {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-borderless-custom th {
+            color: var(--gray-700);
+            font-weight: 600;
+            padding: 1.25rem 1.5rem;
+            text-align: left;
+            width: 40%;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .table-borderless-custom td {
+            padding: 1.25rem 1.5rem;
+            color: var(--gray-800);
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .table-borderless-custom tr:last-child th,
+        .table-borderless-custom tr:last-child td {
+            border-bottom: none;
+        }
+
+        .text-decoration-custom {
+            color: var(--primary-red);
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .text-decoration-custom:hover {
+            color: var(--primary-red-dark);
+        }
+
+        .display-score {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .badge-custom {
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .bg-success-custom {
+            background: var(--success) !important;
+            color: var(--white);
+        }
+
+        .bg-info-custom {
+            background: var(--primary-red) !important;
+            color: var(--white);
+        }
+
+        .bg-warning-custom {
+            background: var(--warning) !important;
+            color: var(--white);
+        }
+
+        .bg-secondary-custom {
+            background: var(--gray-600) !important;
+            color: var(--white);
+        }
+
+        .competence-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .competence-card {
+            background: var(--gray-50);
+            border: 2px solid var(--gray-200);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 180px;
+        }
+
+        .competence-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary-red-light);
+        }
+
+        .competence-card h6 {
+            color: var(--gray-700);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .competence-card h4 {
+            color: var(--gray-800);
+            font-weight: 800;
+            font-size: 2.2rem;
+            margin: 0;
+        }
+
+        .text-success-custom {
+            color: var(--success) !important;
+        }
+
+        .text-primary-custom {
+            color: var(--primary-red) !important;
+        }
+
+        .text-info-custom {
+            color: var(--primary-red) !important;
+        }
+
+        .text-warning-custom {
+            color: var(--warning) !important;
+        }
+
+        .benefits-section {
+            background: linear-gradient(135deg, var(--success) 0%, #0da172 100%);
+            color: var(--white);
+        }
+
+        .benefits-section .card-header-custom {
+            background: transparent;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            color: var(--white);
+        }
+
+        .benefits-section .card-header-custom h5 i {
+            color: var(--white);
+        }
+
+        .benefits-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .benefits-section li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .benefits-section li::before {
+            content: '✓';
+            font-weight: bold;
+            color: var(--white);
+        }
+
+        .layout-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            align-items: start;
+        }
+
+        @media (max-width: 768px) {
+            .layout-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container-custom {
+                padding: 1rem;
+            }
+            
+            .header-section {
+                padding: 2rem 1.5rem;
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+            
+            .header-section h2 {
+                font-size: 2rem;
+            }
+            
+            .competence-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .competence-card {
+                min-height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container-custom">
+            <!-- Header -->
+            <div class="header-section">
+                <h2>
+                    <i class="fas fa-chart-bar"></i>
+                    Detalle del Resultado
+                </h2>
+                <div style="display: flex; gap: 1rem;">
+                    <a th:href="@{/resultados/editar/{id}(id=${resultado.id})}" class="btn-custom btn-warning-custom">
+                        <i class="fas fa-edit"></i> Editar
+                    </a>
+                    <a th:href="@{/resultados}" class="btn-custom btn-secondary-custom">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </a>
+                </div>
+            </div>
+
+            <div class="layout-grid">
+                <!-- Información general -->
+                <div>
+                    <div class="card-custom">
+                        <div class="card-header-custom">
+                            <h5>
+                                <i class="fas fa-info-circle"></i>
+                                Información General
+                            </h5>
+                        </div>
+                        <div class="card-body-custom">
+                            <table class="table-borderless-custom">
+                                <tr>
+                                    <th>Estudiante:</th>
+                                    <td>
+                                        <a th:href="@{/estudiantes/{id}(id=${resultado.estudiante.id})}" 
+                                           class="text-decoration-custom">
+                                            <i class="fas fa-user"></i>
+                                            <strong th:text="${resultado.estudiante.primerNombre + ' ' + resultado.estudiante.primerApellido}">
+                                                Nombre
+                                            </strong>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Registro:</th>
+                                    <td>
+                                        <i class="fas fa-id-card me-2" style="color: var(--gray-600);"></i>
+                                        <span th:text="${resultado.estudiante.numeroRegistro}">EK20183007722</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Puntaje Global:</th>
+                                    <td>
+                                        <span th:text="${resultado.puntajeGlobal}" 
+                                              th:class="${resultado.puntajeGlobal >= 180} ? 'display-score text-success-custom' : 'display-score text-primary-custom'">
+                                            200
+                                        </span>
+                                        <span style="color: var(--gray-600); font-size: 1.5rem; font-weight: 600;">/ 300</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Nivel Global:</th>
+                                    <td>
+                                        <span class="badge-custom" 
+                                              th:classappend="${resultado.puntajeGlobal >= 241} ? 'bg-success-custom' : 
+                                                             ${resultado.puntajeGlobal >= 211} ? 'bg-info-custom' :
+                                                             ${resultado.puntajeGlobal >= 180} ? 'bg-warning-custom' : 'bg-secondary-custom'"
+                                              th:text="${resultado.nivelGlobal}">
+                                            <i class="fas fa-trophy"></i>Nivel 3
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Fecha de Registro:</th>
+                                    <td>
+                                        <i class="fas fa-calendar me-2" style="color: var(--gray-600);"></i>
+                                        <span th:text="${#temporals.format(resultado.fechaRegistro, 'dd/MM/yyyy HH:mm')}">15/11/2024 10:30</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Beneficios aplicables -->
+                    <div class="card-custom benefits-section" th:if="${resultado.puntajeGlobal >= 180}">
+                        <div class="card-header-custom">
+                            <h5>
+                                <i class="fas fa-award"></i>
+                                Beneficios Obtenidos
+                            </h5>
+                        </div>
+                        <div class="card-body-custom">
+                            <div th:if="${resultado.puntajeGlobal >= 241}">
+                                <h6 style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; font-size: 1.2rem;">
+                                    <i class="fas fa-trophy"></i> Excelente - Puntaje ≥ 241
+                                </h6>
+                                <ul>
+                                    <li>Exoneración de trabajo de grado con nota 5.0</li>
+                                    <li>Beca 100% en derechos de grado</li>
+                                </ul>
+                            </div>
+                            <div th:if="${resultado.puntajeGlobal >= 211 and resultado.puntajeGlobal <= 240}">
+                                <h6 style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; font-size: 1.2rem;">
+                                    <i class="fas fa-medal"></i> Muy Bueno - Puntaje 211-240
+                                </h6>
+                                <ul>
+                                    <li>Exoneración de trabajo de grado con nota 4.7</li>
+                                    <li>Beca 50% en derechos de grado</li>
+                                </ul>
+                            </div>
+                            <div th:if="${resultado.puntajeGlobal >= 180 and resultado.puntajeGlobal <= 210}">
+                                <h6 style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; font-size: 1.2rem;">
+                                    <i class="fas fa-star"></i> Bueno - Puntaje 180-210
+                                </h6>
+                                <ul>
+                                    <li>Exoneración de trabajo de grado con nota 4.5</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Competencias específicas -->
+                <div>
+                    <div class="card-custom">
+                        <div class="card-header-custom">
+                            <h5>
+                                <i class="fas fa-chart-pie"></i>
+                                Competencias Específicas
+                            </h5>
+                        </div>
+                        <div class="card-body-custom">
+                            <div class="competence-grid">
+                                <div class="competence-card">
+                                    <h6><i class="fas fa-edit me-2"></i>Comunicación Escrita</h6>
+                                    <h4 th:text="${resultado.comunicacionEscrita} ?: 'N/A'" 
+                                        th:class="${resultado.comunicacionEscrita != null and resultado.comunicacionEscrita >= 150} ? 'text-success-custom' : 'text-primary-custom'">
+                                        128
+                                    </h4>
+                                </div>
+                                <div class="competence-card">
+                                    <h6><i class="fas fa-calculator me-2"></i>Razonamiento Cuantitativo</h6>
+                                    <h4 th:text="${resultado.razonamientoCuantitativo} ?: 'N/A'"
+                                        th:class="${resultado.razonamientoCuantitativo != null and resultado.razonamientoCuantitativo >= 150} ? 'text-success-custom' : 'text-primary-custom'">
+                                        182
+                                    </h4>
+                                </div>
+                                <div class="competence-card">
+                                    <h6><i class="fas fa-book me-2"></i>Lectura Crítica</h6>
+                                    <h4 th:text="${resultado.lecturaCritica} ?: 'N/A'"
+                                        th:class="${resultado.lecturaCritica != null and resultado.lecturaCritica >= 150} ? 'text-success-custom' : 'text-primary-custom'">
+                                        202
+                                    </h4>
+                                </div>
+                                <div class="competence-card">
+                                    <h6><i class="fas fa-users me-2"></i>Competencias Ciudadanas</h6>
+                                    <h4 th:text="${resultado.competenciasCiudadanas} ?: 'N/A'"
+                                        th:class="${resultado.competenciasCiudadanas != null and resultado.competenciasCiudadanas >= 150} ? 'text-success-custom' : 'text-primary-custom'">
+                                        206
+                                    </h4>
+                                </div>
+                                <div class="competence-card">
+                                    <h6><i class="fas fa-language me-2"></i>Inglés</h6>
+                                    <h4 th:text="${resultado.ingles} ?: 'N/A'"
+                                        th:class="${resultado.ingles != null and resultado.ingles >= 150} ? 'text-success-custom' : 'text-primary-custom'">
+                                        183
+                                    </h4>
+                                </div>
+                                <div class="competence-card" th:if="${resultado.nivelInglesCefr != null}">
+                                    <h6><i class="fas fa-globe me-2"></i>Nivel Inglés CEFR</h6>
+                                    <h4 th:text="${resultado.nivelInglesCefr}" class="text-info-custom">B1</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráfico de progreso -->
+            <div class="card-custom">
+                <div class="card-header-custom">
+                    <h5>
+                        <i class="fas fa-chart-line"></i>
+                        Análisis de Competencias
+                    </h5>
+                </div>
+                <div class="card-body-custom">
+                    <div style="text-align: center; padding: 3rem 2rem;">
+                        <i class="fas fa-chart-bar" style="font-size: 4rem; color: var(--primary-red-light); margin-bottom: 1.5rem;"></i>
+                        <h5 style="color: var(--gray-800); margin-bottom: 1rem; font-size: 1.5rem;">Visualización de competencias</h5>
+                        <p style="color: var(--gray-600); margin-bottom: 0.5rem; font-size: 1.1rem;">En desarrollo</p>
+                        <small style="color: var(--gray-500);">Próximamente se incluirán gráficos comparativos y análisis detallados</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

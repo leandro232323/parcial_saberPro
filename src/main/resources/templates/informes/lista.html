@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <title>Informes - Saber Pro</title>
+    <style>
+        :root {
+            --primary-50: #fff5f5;
+            --primary-100: #fed7d7;
+            --primary-200: #feb2b2;
+            --primary-300: #fc8181;
+            --primary-400: #f56565;
+            --primary-500: #e53e3e;
+            --primary-600: #c53030;
+            --primary-700: #9b2c2c;
+            --primary-800: #822727;
+            --primary-900: #63171b;
+
+            --success: #38a169;
+            --warning: #d69e2e;
+            --info: #3182ce;
+            --error: #e53e3e;
+
+            --text-dark: #2d3748;
+            --text-light: #4a5568;
+            --text-lighter: #718096;
+
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            background: var(--primary-50);
+            border-bottom: 1px solid var(--primary-100);
+            padding: 18px 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .card-header.bg-success {
+            background: linear-gradient(135deg, var(--success), #48bb78) !important;
+        }
+
+        .card-header.bg-info {
+            background: linear-gradient(135deg, var(--info), #4299e1) !important;
+        }
+
+        .card-header.bg-warning {
+            background: linear-gradient(135deg, var(--warning), #ed8936) !important;
+        }
+
+        .list-group-item {
+            border: none;
+            border-radius: 12px !important;
+            margin-bottom: 10px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .list-group-item:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .form-control, .form-select {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px 12px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-400);
+            box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1);
+            outline: none;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .form-check-input:checked {
+            background-color: var(--primary-500);
+            border-color: var(--primary-500);
+        }
+
+        .stat-card {
+            border-radius: 12px;
+            padding: 20px;
+            color: white;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-card h4 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+            color: white;
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, #ebf8ff, #fed7d7);
+            border: 1px solid #fed7d7;
+            border-radius: 12px;
+        }
+
+        .border-success {
+            border: 2px solid var(--success) !important;
+            border-radius: 12px;
+        }
+
+        .border-info {
+            border: 2px solid var(--info) !important;
+            border-radius: 12px;
+        }
+
+        .border-warning {
+            border: 2px solid var(--warning) !important;
+            border-radius: 12px;
+        }
+
+        .list-unstyled li {
+            padding: 5px 0;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .list-unstyled li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .card-body {
+                padding: 15px;
+            }
+            
+            .stat-card h4 {
+                font-size: 1.5rem;
+            }
+            
+            .list-group-item {
+                margin-bottom: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Informes y Reportes</h2>
+        </div>
+
+        <div class="row">
+            <!-- Reportes disponibles -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-file-alt"></i> Reportes Disponibles
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">
+                                        <i class="fas fa-users text-primary"></i> 
+                                        Reporte General de Estudiantes
+                                    </h6>
+                                </div>
+                                <p class="mb-1">Listado completo de todos los estudiantes registrados</p>
+                                <small class="text-muted">Incluye información personal y contacto</small>
+                            </a>
+                            
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">
+                                        <i class="fas fa-chart-bar text-success"></i> 
+                                        Resultados por Competencia
+                                    </h6>
+                                </div>
+                                <p class="mb-1">Análisis detallado de resultados por competencia específica</p>
+                                <small class="text-muted">Comparativa entre estudiantes</small>
+                            </a>
+                            
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">
+                                        <i class="fas fa-award text-warning"></i> 
+                                        Estudiantes Destacados
+                                    </h6>
+                                </div>
+                                <p class="mb-1">Listado de estudiantes con puntajes sobresalientes (≥180)</p>
+                                <small class="text-muted">Incluye beneficios obtenidos</small>
+                            </a>
+                            
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">
+                                        <i class="fas fa-chart-line text-info"></i> 
+                                        Estadísticas Globales
+                                    </h6>
+                                </div>
+                                <p class="mb-1">Reporte estadístico con promedios y distribuciones</p>
+                                <small class="text-muted">Gráficos y análisis comparativos</small>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Generar reportes personalizados -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-cogs"></i> Generar Reporte Personalizado
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="mb-3">
+                                <label class="form-label">Tipo de Reporte</label>
+                                <select class="form-select">
+                                    <option selected>Seleccionar tipo de reporte...</option>
+                                    <option value="general">Reporte General</option>
+                                    <option value="destacados">Estudiantes Destacados</option>
+                                    <option value="competencia">Por Competencia Específica</option>
+                                    <option value="rango">Por Rango de Puntaje</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Rango de Fechas</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="date" class="form-control" placeholder="Fecha inicial">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="date" class="form-control" placeholder="Fecha final">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Rango de Puntaje</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="number" class="form-control" placeholder="Mínimo" min="0" max="300">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="number" class="form-control" placeholder="Máximo" min="0" max="300">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Formato de Salida</label>
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="formato" id="pdf" value="pdf" checked>
+                                        <label class="form-check-label" for="pdf">PDF</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="formato" id="excel" value="excel">
+                                        <label class="form-check-label" for="excel">Excel</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="formato" id="csv" value="csv">
+                                        <label class="form-check-label" for="csv">CSV</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-download"></i> Generar Reporte
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estadísticas rápidas -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-chart-pie"></i> Vista Previa - Estadísticas
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-2">
+                                <div class="stat-card" style="background: linear-gradient(135deg, #3498db, #2980b9);">
+                                    <h4>35</h4>
+                                    <small>Total Estudiantes</small>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="stat-card" style="background: linear-gradient(135deg, #27ae60, #229954);">
+                                    <h4>28</h4>
+                                    <small>Con Resultados</small>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="stat-card" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">
+                                    <h4>15</h4>
+                                    <small>Destacados</small>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="stat-card" style="background: linear-gradient(135deg, #f39c12, #e67e22);">
+                                    <h4>167</h4>
+                                    <small>Promedio Global</small>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="stat-card" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">
+                                    <h4>241</h4>
+                                    <small>Mejor Puntaje</small>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="stat-card" style="background: linear-gradient(135deg, #1abc9c, #16a085);">
+                                    <h4>96</h4>
+                                    <small>Peor Puntaje</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información de beneficios -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-info-circle"></i> Información sobre Beneficios UTS
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <h6><i class="fas fa-exclamation-circle"></i> Acuerdo No. 01-009 (22 de abril de 2024)</h6>
+                            <p class="mb-0">Según el acuerdo del Consejo Directivo, los estudiantes con puntajes sobresalientes 
+                            en las pruebas Saber Pro pueden acceder a beneficios académicos y económicos.</p>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card border-success">
+                                    <div class="card-header bg-success text-white">
+                                        <h6 class="mb-0">Puntaje ≥ 241</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="list-unstyled mb-0">
+                                            <li>Nota 5.0 en trabajo de grado</li>
+                                            <li>Beca 100% derechos de grado</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card border-info">
+                                    <div class="card-header bg-info text-white">
+                                        <h6 class="mb-0">Puntaje 211-240</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="list-unstyled mb-0">
+                                            <li>Nota 4.7 en trabajo de grado</li>
+                                            <li>Beca 50% derechos de grado</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card border-warning">
+                                    <div class="card-header bg-warning text-white">
+                                        <h6 class="mb-0">Puntaje 180-210</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="list-unstyled mb-0">
+                                            <li>Nota 4.5 en trabajo de grado</li>
+                                            <li>Exoneración de entrega</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

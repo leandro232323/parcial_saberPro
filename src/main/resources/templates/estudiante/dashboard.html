@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+
+<head>
+    <title>Mi Dashboard - Saber Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link th:href="@{/css/styles.css(v=1.0)}" rel="stylesheet">
+    <style>
+        :root {
+            --primary-red: #e53e3e;
+            --primary-red-dark: #c53030;
+            --primary-red-light: #fed7d7;
+            --primary-red-superlight: #fff5f5;
+            --white: #ffffff;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --purple: #8b5cf6;
+            --pink: #ec4899;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--gray-800);
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            min-height: 100vh;
+        }
+
+        .student-dashboard {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
+
+        .welcome-banner {
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-dark) 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 3rem 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 20px 40px rgba(229, 62, 62, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .welcome-banner::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+
+        .welcome-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+            position: relative;
+            z-index: 2;
+            letter-spacing: -0.025em;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            font-weight: 400;
+            position: relative;
+            z-index: 2;
+        }
+
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--gray-100);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .info-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-dark) 100%);
+            border-radius: 16px 0 0 16px;
+        }
+
+        .card-title {
+            font-size: 1.375rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--gray-900);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            letter-spacing: -0.025em;
+        }
+
+        .card-title i {
+            color: var(--primary-red);
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            background: var(--primary-red-superlight);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--gray-100);
+            transition: all 0.2s ease;
+        }
+
+        .info-item:hover {
+            background: var(--gray-50);
+            margin: 0 -1rem;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 500;
+            color: var(--gray-600);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-label i {
+            color: var(--primary-red);
+            font-size: 0.875rem;
+            width: 20px;
+        }
+
+        .info-value {
+            color: var(--gray-900);
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-align: right;
+        }
+
+        .results-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--gray-100);
+            transition: all 0.3s ease;
+        }
+
+        .results-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .main-score {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--primary-red-superlight) 0%, #fff 100%);
+            border-radius: 16px;
+            border: 2px solid var(--primary-red-light);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-score::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-red) 0%, var(--primary-red-dark) 100%);
+        }
+
+        .score-number {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--primary-red);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 4px 8px rgba(229, 62, 62, 0.1);
+            line-height: 1;
+        }
+
+        .score-label {
+            font-size: 1.125rem;
+            color: var(--gray-600);
+            font-weight: 600;
+            letter-spacing: -0.025em;
+        }
+
+        .competency-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.125rem 1rem;
+            margin-bottom: 0.75rem;
+            background: var(--gray-50);
+            border-radius: 12px;
+            border: 1px solid var(--gray-200);
+            transition: all 0.2s ease;
+        }
+
+        .competency-item:hover {
+            background: var(--white);
+            border-color: var(--primary-red-light);
+            transform: translateX(4px);
+        }
+
+        .competency-name {
+            font-weight: 600;
+            color: var(--gray-800);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .competency-name i {
+            color: var(--primary-red);
+            font-size: 1rem;
+            width: 24px;
+        }
+
+        .competency-score {
+            font-weight: 700;
+            color: var(--primary-red);
+            font-size: 1.125rem;
+            background: var(--white);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--primary-red-light);
+        }
+
+        .benefits-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--gray-100);
+            grid-column: 1 / -1;
+            transition: all 0.3s ease;
+        }
+
+        .benefits-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .benefit-message {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-radius: 16px;
+            border: 2px dashed #bae6fd;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .benefit-message::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 100px;
+            height: 100px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 50%;
+        }
+
+        .benefit-icon {
+            font-size: 4rem;
+            color: var(--info);
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .benefit-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+            letter-spacing: -0.025em;
+        }
+
+        .benefit-desc {
+            color: var(--gray-600);
+            font-size: 1.125rem;
+            line-height: 1.6;
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .empty-results {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--gray-500);
+        }
+
+        .empty-results i {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.5;
+            color: var(--gray-400);
+        }
+
+        .empty-results h4 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--gray-600);
+        }
+
+        .empty-results p {
+            font-size: 1.125rem;
+            color: var(--gray-500);
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+            grid-column: 1 / -1;
+        }
+
+        .action-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            text-decoration: none;
+            color: var(--gray-800);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border: 1px solid var(--gray-100);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-red) 0%, var(--primary-red-dark) 100%);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .action-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            text-decoration: none;
+            color: var(--gray-800);
+            border-color: var(--primary-red-light);
+        }
+
+        .action-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .action-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-red-light) 0%, var(--primary-red-superlight) 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: var(--primary-red);
+            font-size: 2rem;
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary-red-light);
+        }
+
+        .action-card:hover .action-icon {
+            transform: scale(1.1);
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-dark) 100%);
+            color: white;
+        }
+
+        .action-title {
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            font-size: 1.25rem;
+            color: var(--gray-900);
+            letter-spacing: -0.025em;
+        }
+
+        .action-desc {
+            font-size: 1rem;
+            color: var(--gray-600);
+            line-height: 1.5;
+        }
+
+        /* Estados de beneficios específicos */
+        .benefit-achieved {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border-color: #bbf7d0;
+        }
+
+        .benefit-achieved .benefit-icon {
+            color: var(--success);
+        }
+
+        .benefit-pending {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border-color: #fde68a;
+        }
+
+        .benefit-pending .benefit-icon {
+            color: var(--warning);
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-content {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .welcome-banner {
+                padding: 2rem 1.5rem;
+            }
+
+            .welcome-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .student-dashboard {
+                padding: 1rem;
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .info-card,
+            .results-card,
+            .benefits-card {
+                padding: 1.5rem;
+            }
+
+            .score-number {
+                font-size: 3rem;
+            }
+
+            .benefit-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .welcome-title {
+                font-size: 1.75rem;
+            }
+
+            .welcome-subtitle {
+                font-size: 1.125rem;
+            }
+
+            .card-title {
+                font-size: 1.25rem;
+            }
+
+            .competency-item {
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div layout:fragment="content" class="student-dashboard">
+        <!-- Banner de Bienvenida -->
+        <div class="welcome-banner">
+            <h1 class="welcome-title">¡Bienvenido, <span
+                    th:text="${estudiante.primerNombre} + ' ' + ${estudiante.primerApellido}">Estudiante</span>!</h1>
+            <p class="welcome-subtitle">Consulta tus resultados y beneficios disponibles</p>
+        </div>
+
+        <!-- Contenido Principal -->
+        <div class="dashboard-content">
+            <!-- Información Personal -->
+            <div class="info-card">
+                <h3 class="card-title">
+                    <i class="fas fa-user-circle"></i>
+                    Mi Información
+                </h3>
+                <div class="info-item">
+                    <span class="info-label">
+                        <i class="fas fa-id-card"></i>
+                        Número de Registro:
+                    </span>
+                    <span class="info-value" th:text="${estudiante.numeroRegistro}">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">
+                        <i class="fas fa-address-card"></i>
+                        Documento:
+                    </span>
+                    <span class="info-value"
+                        th:text="${estudiante.tipoDocumento} + ' ' + ${estudiante.numeroDocumento}">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">
+                        <i class="fas fa-envelope"></i>
+                        Correo:
+                    </span>
+                    <span class="info-value"
+                        th:text="${estudiante.correoElectronico != null ? estudiante.correoElectronico : 'No registrado'}">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">
+                        <i class="fas fa-phone"></i>
+                        Teléfono:
+                    </span>
+                    <span class="info-value"
+                        th:text="${estudiante.numeroTelefonico != null ? estudiante.numeroTelefonico : 'No registrado'}">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">
+                        <i class="fas fa-globe"></i>
+                        Nivel de Inglés:
+                    </span>
+                    <span class="info-value"
+                        th:text="${estudiante.nivelIngles != null ? estudiante.nivelIngles : 'No registrado'}">-</span>
+                </div>
+            </div>
+
+            <!-- Mis Resultados -->
+            <div th:if="${resultados != null and !resultados.isEmpty()}">
+                <div th:each="resultado : ${resultados}" th:if="${resultadoStat.first}">
+                    <div class="main-score">
+                        <div class="score-number" th:text="${resultado.puntajeGlobal}">-</div>
+                        <div class="score-label">Puntaje Global Saber Pro</div>
+                    </div>
+
+                    <div class="competency-item">
+                        <span class="competency-name">
+                            <i class="fas fa-edit"></i>
+                            Comunicación Escrita
+                        </span>
+                        <span class="competency-score" th:text="${resultado.comunicacionEscrita}">-</span>
+                    </div>
+                    <div class="competency-item">
+                        <span class="competency-name">
+                            <i class="fas fa-calculator"></i>
+                            Razonamiento Cuantitativo
+                        </span>
+                        <span class="competency-score" th:text="${resultado.razonamientoCuantitativo}">-</span>
+                    </div>
+                    <div class="competency-item">
+                        <span class="competency-name">
+                            <i class="fas fa-book-reader"></i>
+                            Lectura Crítica
+                        </span>
+                        <span class="competency-score" th:text="${resultado.lecturaCritica}">-</span>
+                    </div>
+                    <div class="competency-item">
+                        <span class="competency-name">
+                            <i class="fas fa-users"></i>
+                            Competencias Ciudadanas
+                        </span>
+                        <span class="competency-score" th:text="${resultado.competenciasCiudadanas}">-</span>
+                    </div>
+                    <div class="competency-item">
+                        <span class="competency-name">
+                            <i class="fas fa-language"></i>
+                            Inglés
+                        </span>
+                        <span class="competency-score" th:text="${resultado.ingles}">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Beneficios -->
+            <div class="benefits-card">
+                <h3 class="card-title">
+                    <i class="fas fa-award"></i>
+                    Mis Beneficios
+                </h3>
+
+                <!-- Usando el primer resultado para calcular beneficios -->
+                <div th:if="${resultados != null and !resultados.isEmpty()}">
+                    <div th:each="resultado : ${resultados}" th:if="${resultadoStat.first}">
+
+                        <!-- BENEFICIOS SEGÚN ACUERDO No. 01-009 UTS -->
+
+                        <!-- Puntaje menor a 80 - NO PUEDE GRADUARSE -->
+                        <div th:if="${resultado.puntajeGlobal < 80}">
+                            <div class="benefit-message benefit-pending"
+                                style="background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); border-color: #fecaca;">
+                                <div class="benefit-icon">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div class="benefit-title" style="color: #dc2626;">No te puedes graduar, lo sentimos</div>
+                                <div class="benefit-desc">
+                                    Según el Acuerdo No. 01-009 del Consejo Directivo UTS, con un puntaje inferior a
+                                    <strong>80 puntos</strong> no podrás graduarte. Debes prepararte y presentar
+                                    nuevamente la prueba.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Puntaje entre 80 y 119 - SIN BENEFICIOS -->
+                        <div th:if="${resultado.puntajeGlobal >= 80 and resultado.puntajeGlobal <= 119}">
+                            <div class="benefit-message benefit-pending">
+                                <div class="benefit-icon">
+                                    <i class="fas fa-graduation-cap"></i>
+                                </div>
+                                <div class="benefit-title">Sigue Esforzándote</div>
+                                <div class="benefit-desc">
+                                    Obtén un puntaje superior a <strong>120 puntos</strong> en Saber Pro para acceder a
+                                    los incentivos de graduación.
+                                    Puntaje actual: <strong th:text="${resultado.puntajeGlobal}"></strong> puntos.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Puntaje entre 120 y 150 - EXONERACIÓN CON 4.5 -->
+                        <div th:if="${resultado.puntajeGlobal >= 120 and resultado.puntajeGlobal <= 150}">
+                            <div class="benefit-message benefit-achieved">
+                                <div class="benefit-icon">
+                                    <i class="fas fa-trophy"></i>
+                                </div>
+                                <div class="benefit-title">¡Felicidades! Tienes Exoneración de Trabajo de Grado</div>
+                                <div class="benefit-desc">
+                                    <strong>Beneficio:</strong> Se exonera de la entrega del informe final de trabajo de
+                                    grado,
+                                    o de realizar Seminario de grado IV, con nota de <strong>4.5</strong>.<br>
+                                    <strong>Puntaje obtenido:</strong> <span
+                                        th:text="${resultado.puntajeGlobal}"></span> puntos
+                                    (Rango: 120-150 puntos)
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Puntaje entre 151 y 170 - EXONERACIÓN CON 4.7 + BECA 50% -->
+                        <div th:if="${resultado.puntajeGlobal >= 151 and resultado.puntajeGlobal <= 170}">
+                            <div class="benefit-message benefit-achieved">
+                                <div class="benefit-icon">
+                                    <i class="fas fa-medal"></i>
+                                </div>
+                                <div class="benefit-title">¡Excelente! Tienes Exoneración + Beca 50%</div>
+                                <div class="benefit-desc">
+                                    <strong>Beneficios:</strong><br>
+                                    • Exoneración de la entrega del informe final de trabajo de grado, o de realizar
+                                    Seminario de grado IV, con nota de <strong>4.7</strong><br>
+                                    • Beca con un <strong>50%</strong> el valor de derechos de grado<br>
+                                    <strong>Puntaje obtenido:</strong> <span
+                                        th:text="${resultado.puntajeGlobal}"></span> puntos
+                                    (Rango: 151-170 puntos)
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Puntaje superior a 171 - EXONERACIÓN CON 5.0 + BECA 100% -->
+                        <div th:if="${resultado.puntajeGlobal > 170}">
+                            <div class="benefit-message benefit-achieved"
+                                style="background: linear-gradient(135deg, #f0fdf4 0%, #bbf7d0 100%); border-color: #86efac;">
+                                <div class="benefit-icon">
+                                    <i class="fas fa-crown"></i>
+                                </div>
+                                <div class="benefit-title">¡Increíble! Tienes Exoneración + Beca 100%</div>
+                                <div class="benefit-desc">
+                                    <strong>Beneficios:</strong><br>
+                                    • Exoneración de la entrega del informe final de trabajo de grado, o de realizar
+                                    Seminario de grado IV, con nota de <strong>5.0</strong><br>
+                                    • Beca con un <strong>100%</strong> el valor de derechos de grado<br>
+                                    <strong>Puntaje obtenido:</strong> <span
+                                        th:text="${resultado.puntajeGlobal}"></span> puntos
+                                    (Rango: Superior a 171 puntos)
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Mensaje si no hay resultados -->
+                <div th:if="${resultados == null or resultados.isEmpty()}">
+                    <div class="benefit-message benefit-pending">
+                        <div class="benefit-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="benefit-title">Sigue Esforzándote</div>
+                        <div class="benefit-desc">
+                            Obtén un puntaje superior a <strong>120 puntos</strong> en Saber Pro para acceder a los
+                            incentivos de graduación.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información importante sobre los beneficios -->
+                <div
+                    style="margin-top: 1.5rem; padding: 1rem; background: #f8fafc; border-radius: 8px; border-left: 4px solid var(--primary-red);">
+                    <h4 style="color: var(--primary-red); margin-bottom: 0.5rem; font-size: 0.95rem;">
+                        <i class="fas fa-info-circle"></i> Información Importante
+                    </h4>
+                    <p style="color: var(--gray-600); font-size: 0.875rem; margin: 0;">
+                        <strong>Vigencia:</strong> 1 año a partir de la fecha de publicación de resultados por parte del
+                        ICFES.<br>
+                        <strong>Nota:</strong> Los beneficios no son acumulables y son intransferibles.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Acciones Rápidas -->
+            <div class="quick-actions">
+                <a th:href="@{/estudiante/mis-resultados}" class="action-card">
+                    <div class="action-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="action-title">Ver Mis Resultados</div>
+                    <div class="action-desc">Consulta tu historial completo de resultados y estadísticas detalladas
+                    </div>
+                </a>
+
+                <a th:href="@{/estudiante/mi-perfil}" class="action-card">
+                    <div class="action-icon">
+                        <i class="fas fa-user-edit"></i>
+                    </div>
+                    <div class="action-title">Actualizar Perfil</div>
+                    <div class="action-desc">Modifica tu información personal y datos de contacto</div>
+                </a>
+
+                <a th:href="@{/estudiante/beneficios}" class="action-card">
+                    <div class="action-icon">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <div class="action-title">Ver Beneficios</div>
+                    <div class="action-desc">Consulta todos los incentivos y beneficios disponibles</div>
+                </a>
+
+                <a th:href="@{/auth/logout}" class="action-card">
+                    <div class="action-icon">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </div>
+                    <div class="action-title">Cerrar Sesión</div>
+                    <div class="action-desc">Salir de manera segura de tu cuenta</div>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
